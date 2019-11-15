@@ -19,8 +19,15 @@ if(isset($archives["imagens"])) {
 
 use yii\widgets\ActiveForm;
 
-
 ?>
+<?php if($success): ?>
+<div class="row">
+    <div class="alert alert-success">
+        <h3>Salvo com sucesso</h3>
+    </div>
+</div>
+<?php endif; ?>
+
 <div class="row">
     <div class="col-md-12">
         <div class="center-block" >
@@ -33,7 +40,7 @@ use yii\widgets\ActiveForm;
     </div>
     <?php if(isset($archives["imagens"])): ?>
         <?php foreach ($archives["imagens"] as $imagem): ?>
-        <div class="col-md-3 text-center" >
+        <div class="col-md-3 text-center" style="margin-top:30px">
             <div style="border: 1px solid #1b6d85; border-radius: 16px; padding: 10px;margin">
                 <img src="<?= $imagem["url"] ?>" class="img-responsive" style="display: inline;max-height: 200px;max-width: 200px">
                 <h5 class="card-title"><?= $imagem["name"] ?></h5>

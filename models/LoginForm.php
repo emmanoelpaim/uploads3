@@ -27,7 +27,7 @@ class LoginForm extends Model
     public function rules()
     {
         return [
-            [['file'], 'file', 'extensions' => 'gif, jpg, jpeg',],
+            [['file'], 'file', 'extensions' => 'gif, jpg, jpeg, png',],
             // username and password are both required
             [['username', 'password'], 'required'],
             // rememberMe must be a boolean value

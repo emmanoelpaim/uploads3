@@ -11,6 +11,7 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use yii\web\UploadedFile;
 use app\models\ContactForms;
+use app\models\Api;
 
 class SiteController extends Controller
 {
@@ -76,93 +77,14 @@ class SiteController extends Controller
             $model->file = UploadedFile::getInstance($model, 'file');
 
             if ($model->file) {
-
-                $url       = 'http://localhost:5000/aws/sign';
-                $cabecalho = array('Content-Type: application/json', 'Accept: application/json');
-                $campos    = json_encode(array('status' => 'paused'));
-
-                $ch = curl_init();
-
-                curl_setopt($ch, CURLOPT_URL,            $url);
-                curl_setopt($ch, CURLOPT_HTTPHEADER,     $cabecalho);
-                curl_setopt($ch, CURLOPT_POSTFIELDS,     $campos);
-                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_POST,           true);
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST,  'PUT');
-
-                $resposta = curl_exec($ch);
-
-                var_dump($resposta);
-                die;
-
-                curl_close($ch);
-                var_dump($model->file);
-                die;
+                $api = new Api();
+                $pathArchive = $api->signUp($model);
+                $api->uploadFile($model->file,$pathArchive["signedRequest"]);
             }
-        }
-        return $this->render('index',['model'=>$model]);
-    }
-
-    /**
-     * Login action.
-     *
-     * @return Response|string
-     */
-    public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+            return $this->render('index',['model'=>$model,'success'=>true]);
         }
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
-
-        $model->password = '';
-        return $this->render('login', [
-            'model' => $model,
-        ]);
+        return $this->render('index',['model'=>$model,'success'=>false]);
     }
 
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    }
-
-    /**
-     * Displays contact page.
-     *
-     * @return Response|string
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
-
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
-    }
 }
