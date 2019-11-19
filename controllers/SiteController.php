@@ -78,7 +78,7 @@ class SiteController extends Controller
         if (Yii::$app->request->isPost) {
 
             $model->file = UploadedFile::getInstance($model, 'file');
-            $model->name = Yii::$app->request->post()["LoginForm"]["name"];
+            $model->name = isset(Yii::$app->request->post()["LoginForm"]["name"])?Yii::$app->request->post()["LoginForm"]["name"]:"";
 
             if ($model->file) {
                 $api->uploadFile();

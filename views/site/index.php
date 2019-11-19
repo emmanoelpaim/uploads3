@@ -49,12 +49,11 @@ use yii\widgets\ActiveForm;
                 <div style="border: 1px solid #1b6d85; border-radius: 16px; padding: 10px;margin">
                     <img src="<?= $imagem["url"] ?>" class="img-responsive" style="display: inline;max-height: 200px;max-width: 200px">
                     <h5 class="card-title"><?= $imagem["name"]; ?></h5>
-                    <?= $form->field($model, 'name')->hiddenInput(['value'=>$imagem["name"]]); ?>
+                    <?= $form->field($model, 'name')->hiddenInput(['value'=>$imagem["name"]])->label(false); ?>
                     <input type="submit" class="btn btn-danger" value="Excluir"/>
                 </div>
             </div>
             <?php ActiveForm::end(); ?>
         <?php endforeach; ?>
     <?php endif; ?>
-
 </div>
