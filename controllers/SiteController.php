@@ -72,16 +72,24 @@ class SiteController extends Controller
     {
 
         $model = new LoginForm();
+        $api = new Api();
+        $success = "";
 
         if (Yii::$app->request->isPost) {
+
             $model->file = UploadedFile::getInstance($model, 'file');
+            $model->name = Yii::$app->request->post()["LoginForm"]["name"];
 
             if ($model->file) {
-                $api = new Api();
-                $pathArchive = $api->signUp($model);
-                $api->uploadFile($model->file,$pathArchive["signedRequest"]);
+                $api->uploadFile();
+                $success = "Criado com sucesso";
             }
-            return $this->render('index',['model'=>$model,'success'=>true]);
+            if($model->name){
+                $api->deleteFile($model->name);
+                $success = "Deletado com sucesso";
+            }
+
+            return $this->render('index',['model'=>$model,'success'=>$success]);
         }
 
         return $this->render('index',['model'=>$model,'success'=>false]);
